@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<!--
+Template Name: Epigosha
+Author: <a href="http://www.os-templates.com/">OS Templates</a>
+Author URI: http://www.os-templates.com/
+Licence: Free to use under our free template licence terms
+Licence URI: http://www.os-templates.com/template-terms
+-->
+<html>
+<head>
+<title>Blockreceipt</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+<link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/master/devicon.min.css">
+
+</head>
+<body id="top">
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper bgded" style="background-image:url('images/demo/backgrounds/01.png');">
+  <div id="pageintro" class="hoc split clear">
+    <article class="box bg-coloured clear"> 
+      <!-- ################################################################################################ -->
+      <h2 class="heading">Block receipt</h2>
+      <p>Format for independently verifiable and blockchain friendly proofs of existence.</p>
+      <footer>
+        <ul class="nospace inline pushright">
+          <li><a class="btn" href="#description">Description</a></li>
+          <li><a class="btn inverse" href="#">Contribute</a></li>
+        </ul>
+      </footer>
+      <!-- ################################################################################################ -->
+    </article>
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row1">
+  <header id="header" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <div id="logo" class="fl_left">
+      <h1><a href="index.html">BlockReceipt</a></h1>
+    </div>
+    <nav id="mainav" class="fl_right">
+      <ul class="clear">
+        <li><a href="#problem">Problem</a></li>
+        <li><a class="drop" href="#description">Solution</a>
+          <ul>
+            <li><a href="#examples">Examples</a></li>
+            <li><a href="#description">Fields</a></li>
+            <li><a href="#embedding">Embedding</a></li>
+            <li><a href="#creating">Creating</a></li>
+            <li><a href="#checking">Checking</a></li>
+          </ul>
+        </li>
+        <li><a class="drop" href="#comparisson">Comparisson</a>
+          <ul>
+            <li><a href="#chainpoint">Chainpoint v2</a></li>
+            <li><a href="#ots">OpenTimestamps</a></li>
+          </ul>
+        </li>
+        <li><a href="#libs">Libraries</a></li>
+        <li><a href="#contribute">Contribute!</a></li>
+      </ul>
+    </nav>
+    <!-- ################################################################################################ -->
+  </header>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="problem"></a>
+<div class="wrapper row3">
+  <main class="hoc container clear" style="padding-bottom:0px;"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="first clear btmspace-80">
+      <h3 class="font-x2">Problem</h3>
+      <p class="font-x1">Individual proof of existence for each document, as it was invented by Manuel Araoz and Esteban Ordano, is very expensive with cost about 3$ per instance at the moment. Moreover, each document requires sepate 240+ bytes transaction stored in blockchain, which restricts the performance of such method to approximately 7 documents per second for Bitcoin blockchain. Thus it fails to meet the requirements for integration into modern document management.</p>
+    </div>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="description"></a>
+<div class="wrapper bgded" style="background-color:white;">
+  <div class="hoc split clear">
+    <section class="box left clear"> 
+      <!-- ################################################################################################ -->
+      <h6 class="heading">BlockReceipt purpose</h6>
+      <p>Main goal of BlockReceipt protocol & format is introducing a method to use blockchain invariability for securing document management that is affordable, blockchain-friendly and impervious to recovering via brute force attacks.</p>
+      <p class="btmspace-50">BlockReceipt's subordinate aim is to provide a convinient and extendable format with attention to simplicity of checking and parsimonious disk usage.</p>
+
+      <!-- ################################################################################################ -->
+    </section>
+   <section style="">
+    <center>
+     <img src="images/demo/docs.png" style="width:30%;"></img>
+    </center>
+   </section>
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="examples"></a>
+<div class="wrapper">
+  <article id="cta" class="hoc container clear" style="max-width:100%; "> 
+    <!-- ################################################################################################ -->
+    <h6 class="heading">Examples first</h6>
+    <ul id="examples" class="nospace group">
+      <li class="one_half">
+        <p>Short version</p>
+        <div class="piece-of-code">
+<code>{
+  "<span class="key">v</span>": "<span class="value">1</span>",
+  "<span class="key">data</span>": [<span class="value">null</span>],
+  "<span class="key">merkleProof</span>": [ "<span class="value">3b575a67e2c77e11d98b244253835da50c328c98f7501590b1f41974e5673f0e</span>", "<span class="value">32f31d14005a52d8b8d9fc42d1b4503764693c7af05a5a06e5330ffc618337e1</span>"],
+  "<span class="key">btc-tx</span>": "<span class="value">ce9d399bc4e50eb54b90dbc089df3a909b546315d361cc2bf27d55e7c4f6ff03</span>"
+}</code>
+        </div>
+      </li>
+      <li class="one_half">
+        <p>Full version</p>
+        <div class="piece-of-code">
+<code>{
+  "<span class="key">@format</span>": "<span class="value">blockreceipt.org</span>",
+  "<span class="key">v</span>": "<span class="value">1</span>",
+  "<span class="key">data</span>": [<span class="value">f60bf0d3b59e0341b60e7216186ded4041e601e9e40963b65f5a786d2c76a27c</span>, <span class="value">{"metadata": "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"}</span>],
+  "<span class="key">saltedHash</span>": "<span class="value">$argon2i$v=19$m=65536,t=2,p=1$jL7lLEAjDN+pY2cG1N8D2g$iwj1ueduCvm6B9YVjBSnAHu+6mKzqGmDW745ALR38Uo</span>",
+  "<span class="key">merkleRoot</span>": "<span class="value">e2e8fccf346909be324bc01d7ca6dab77beed1b18c7567b603baaab44b8989c7</span>",
+  "<span class="key">merkleProof</span>": [ "<span class="value">3b575a67e2c77e11d98b244253835da50c328c98f7501590b1f41974e5673f0e</span>", "<span class="value">32f31d14005a52d8b8d9fc42d1b4503764693c7af05a5a06e5330ffc618337e1</span>"],
+  "<span class="key">btc-tx</span>": "<span class="value">ce9d399bc4e50eb54b90dbc089df3a909b546315d361cc2bf27d55e7c4f6ff03</span>"
+  "<span class="key">eth-tx</span>": "<span class="value">ce9d399bc4e50eb54b90dbc089df3a909b546315d361cc2bf27d55e7c4f6ff03</span>"
+}</code>
+        </div>
+       </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </article>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="field-description"></a>
+<div class="wrapper row3">
+  <main class="hoc container clear" style="padding-bottom:0px;"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="first clear btmspace-80">
+      <h3 class="font-x2">Field descriptions</h3>
+      <p class="font-x1">Each BlockReceipt document (further "receipt") is JSON document that contains all the information needed to verify the data without relying on a trusted third party. Some fields like <span class="piece-of-code">"<span class="key">v</span>"</span> or <span class="piece-of-code">"<span class="key">merkleProof</span>"</span> are mandatory, while others like <span class="piece-of-code">"<span class="key">@format</span>"</span> are optional. All first-level keys in receipt should be treated as case-insensitive. All values and high-order level keys should be treated as case-sensitive.
+      </p>
+    Mandatory fields 
+    <ul>
+      <li><span class="piece-of-code">"<span class="key">v</span>"</span> - string specifying version of BlockReceipt format</li>
+      <li><span class="piece-of-code">"<span class="key">data</span>"</span> - array of elements. First one is mandatory and should be equal <span class="piece-of-code">sha256</span> hash of document or null if document hash is concealed.</li>
+      <li><span class="piece-of-code">"<span class="key">merkleProof</span>"</span> - unordered Merkle-tree proof for the element (details are further).</li>
+      <li><span class="piece-of-code">"<span class="key">*-tx</span>"</span> - transaction that contains unordered Merkle-tree root. Asterisc should be substituted with <span class="piece-of-code">BTC</span> for bitcoin blockchain, <span class="piece-of-code">ETH</span> for ethereum blockchain maintained by V.Buterin. Exact rules of embedding described further. More than one <span class="piece-of-code key">*-tx</span> can be presented.</li>
+    </ul>
+    Optional fields
+    <ul>
+      <li><span class="piece-of-code">"<span class="key">@format</span>"</span> - link to format description</li>
+      <li>Second and further elements in <span class="piece-of-code">"<span class="key">data</span>"</span>. Elements can be arbitrary objects: strings, numbers or collections.</li>
+      <li><span class="piece-of-code">"<span class="key">saltedHash</span>"</span> - string with argon2 hashing parameters in accordance to <a href="https://github.com/P-H-C/phc-string-format/blob/master/phc-sf-spec.md">Password Hashing Context specs</a>. <span class="piece-of-code">hash_len</span> shoulbe set to 32.</li>
+      <li><span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> - unordered Merkle-tree root for the element (details are further)</li>
+      <li><span class="piece-of-code">"<span class="key">additional_receipts</span>"</span> - list of receipts, composed by the same rules. All receipts should prove the same <span class="piece-of-code">dochash</span>. This field is added to allows one independently use multiple blockchains and gather gather benefits from all of them. For instance, independently use security of very safe but rare block blockchains like Bitcoin with 10m per block and speed of fast but much less secure blockchains like Ethereum.</li>
+    </ul>
+    </div>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="merkle"></a>
+<div class="wrapper" style="background-color:#a8bef3; color:black;">
+  <div class="hoc container clear">
+    
+    <ul id="examples" class="nospace group">
+    <li class="one_half">
+    <section class="box left clear" > 
+      <!-- ################################################################################################ -->
+      <h6 class="heading">Unordered merkle tree</h6>
+      <p>Unordered merkle tree is very similar to simple <a href="https://en.wikipedia.org/wiki/Merkle_tree">merkle tree</a>. Usually to get overlying element you need to hash concatenation of two underlying hashes. In unordered merkle tree overlying elements is hash of sum of underlying elements, where elements considered like numbers. This method allows specific changing order of elements without altering merkle-root and merkle-proofs. For instance, tree showed on the picture is insensitive to swap of L1 and L2, as well as swap group (L1,L2) with group (L3,L4).</p>
+      <p>As result merkle proofs may not contain order data.</p>
+      <p>BlockReceipt uses <span class="piece-of-code">sha256</span> as hashing algorithm</p>
+      <!-- ################################################################################################ -->
+    </section>
+   </li>
+   <li class="one_half">
+   <section style="">
+    
+     <img src="images/demo/merkle-tree.svg" style=""></img>
+     <p style="color:black;">Image by <a href="https://commons.wikimedia.org/wiki/User:Azaghal">Azaghal</a></p>
+    
+   </section>
+   </li>
+  </div>
+</div>
+
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="embedding"></a>
+<div class="wrapper row3">
+  <main class="hoc container clear" style="padding-bottom:0px;"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="first clear btmspace-80">
+      <h3 class="font-x2">Rules of embedding</h3>
+      <p class="font-x1"> Our main requirements for the methods of embedding data into blockchain are: absolute and evident immutability as well as following the established protocols. Currently BlockReceipt supports only two blockchains: bitcoin and ethereum maintained by V.Buterin. 
+      </p>
+    <ol>
+      <li><span class="red-line">Bitcoin</span> - BlockReceipt uses <span class="piece-of-code">OP_RETURN</span> transactions with some additional rules: 
+          <ul>
+            <li>Transaction should contain only one <span class="piece-of-code">OP_RETURN</span> txout.</li>
+            <li><span class="piece-of-code">OP_RETURN</span> should be first opcode in script</li>
+            <li>Second opcode should be <span class="piece-of-code">OP_PUSH</span> or <span class="piece-of-code">OP_PUSHDATA*</span> which loads all data after it on stack</li>
+            <li>Only last 32bytes of script should correspond to merkle-root. Data between <span class="piece-of-code">OP_PUSH</span> and begining of merkle-root is arbitrary and can be used for branding or other purposes.</li>
+          </ul>
+      </li>
+      <li><span class="red-line">Ethereum</span> - BlockReceipt uses standard ethereum transactions, last 32bytes of data-field should correspond to merkle-root. 
+      </li>
+    </ol>
+    </div>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="creating"></a>
+<div class="wrapper" style="background-color:#271333;">
+  <article id="cta" class="hoc container clear" style="max-width:100%; "> 
+    <!-- ################################################################################################ -->
+    <h6 class="heading">Algorithm of creating receipt</h6>
+    <div class="first clear btmspace-80">
+    <p>BlockReceipt version 1.</p>
+    <div>
+    <ul class="process">
+      <li> Set <span class="piece-of-code">"<span class="key">v</span>"</span> in the receipt to <span class="piece-of-code">"<span class="value">1</span>"</span></li>
+      <li> Create hash of document via <span class="piece-of-code">sha-256</span>. It should be 32-bytes long.</li>
+      <li> Choose additional info which you want to have incorporated with data. Take into account that this info will be stored in receipt as is.</li>
+      <li> Compose <span class="piece-of-code">"<span class="key">data</span>"</span> array. Place document hash as hex-encoded 32bytes number into first element of <span class="piece-of-code">"<span class="key">data</span>"</span> and additional info after it. This <span class="piece-of-code">"<span class="key">data</span>"</span> array will be called as <span class="piece-of-code">"<span class="key">fullData</span>"</span> later. If you don't want to show document hash in receipt, for instance you want to give receipt of document  without possibility of recovering by brute-force attack, substitute first element of <span class="piece-of-code">"<span class="key">fullData</span>"</span> with <span class="piece-of-code value">null</span>(take into account that for this case you must use salting). This new array will be called <span class="piece-of-code">"<span class="key">partialData</span>"</span>. When you want to keep document hash in receipt <span class="piece-of-code">"<span class="key">partialData</span>"</span> is equal to <span class="piece-of-code">"<span class="key">fullData</span>"</span></li>
+      <li> Place <span class="piece-of-code">"<span class="key">partialData</span>"</span> into <span class="piece-of-code">"<span class="key">data</span>"</span> field of receipt.</li>
+      <li> Stringify <span class="piece-of-code">"<span class="key">fullData</span>"</span> in such a way as to make all dictionaries (if they are presented in additional data) sorted by key.</li>
+      <li> If you want to salt receipt, use argon2 algorithm with desired parameters (however key-length should be 32bytes) to salt stringified <span class="piece-of-code">"<span class="key">fullData</span>"</span> and place resulting string(formatted in accordance with <a href="https://github.com/P-H-C/phc-string-format/blob/master/phc-sf-spec.md">Password Hashing Context specs</a>) to <span class="piece-of-code">"<span class="key">salt</span>"</span> field of receipt. Last 43-letter of this string is salted hash encoded in B64. Decode it to 32bytes hex-string to get <span class="piece-of-code">"<span class="key">preparedHash</span>"</span> parameter. If you don't want to salt receipt, hash stringified <span class="piece-of-code">"<span class="key">fullData</span>"</span> with <span class="piece-of-code">sha256</span> algo to get <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>.</li>
+      <li> Place <span class="piece-of-code">"<span class="key">preparedHash</span>"</span> into merkle-tree with hashes for other documents. Create <span class="piece-of-code">"<span class="key">merkleProof</span>"</span> as ordered array of siblings from the deepest to the second-level from top. Thus first element of array will be hashed with <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>, result of hashing will be hashed with next (second) element of array and so on. Final result of this process will be called further <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span>. </li>
+      <li> Optionally place <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> into <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> field of receipt.</li>
+      <li> Embed <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> int blockchain with accordace to rules of embedding. Result txid place into <span class="piece-of-code">"<span class="key">*-tx</span>"</span> field of receipt.</li>
+
+    </ul>
+    </div>
+    </div>
+    <!-- ################################################################################################ -->
+  </article>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="checking"></a>
+<div class="wrapper "  style="background-color:#193313;">
+  <article id="cta" class="hoc container clear" style="max-width:100%; "> 
+    <!-- ################################################################################################ -->
+    <h6 class="heading">Algorithm of checking receipt</h6>
+    <div class="first clear btmspace-80">
+    <p>BlockReceipt version 1. If any checks failed, receipt doesn't prove document.</p>
+    <div>
+    <ul class="process">
+      <li> Check <span class="piece-of-code">"<span class="key">v</span>"</span> in the receipt. It should be <span class="piece-of-code">"<span class="value">1</span>"</span>.</li>
+      <li> Create hash of document via <span class="piece-of-code">sha-256</span>. It should be 32-bytes long. Encode it to hex string.</li>
+      <li> If the first element of <span class="piece-of-code">"<span class="key">data</span>"</span> isn't <span class="piece-of-code value">null</span> compare it with document hash. It should be equal.</li>
+      <li> Compose <span class="piece-of-code">"<span class="key">fullData</span>"</span> array: get <span class="piece-of-code">"<span class="key">data</span>"</span> from receipt and substitute first element with document hash.</li>
+      <li> Stringify <span class="piece-of-code">"<span class="key">fullData</span>"</span> in a such a way to make all dictionaries (if they are presented in additional data) sorted by key.</li>
+      <li> If <span class="piece-of-code">"<span class="key">salt</span>"</span> field is specified, verify stringified <span class="piece-of-code">"<span class="key">fullData</span>"</span> via argon2 algorithm and salted parameter. Last 43-letter of this string is salted hash encoded in B64. Decode it to 32bytes hex-string to get <span class="piece-of-code">"<span class="key">preparedHash</span>"</span> parameter. If salt field doesn't specified, create hash of stringified <span class="piece-of-code">"<span class="key">fullData</span>"</span> with <span class="piece-of-code">sha256</span> algo to get <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>.</li>
+      <li> While <span class="piece-of-code">"<span class="key">merkleProof</span>"</span> not empty do as follows: pop first element of <span class="piece-of-code">"<span class="key">merkleProof</span>"</span>, sum it with <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>, hash result with <span class="piece-of-code">sha256</span> algo and assign to <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>.</li>
+      <li> If <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> presents in receipt compare it with <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>, it should be equal.</li>
+      <li> Grab transaction(or transactions) specified in <span class="piece-of-code">"<span class="key">*-tx</span>"</span>. Extract hash in accordance to embedding rules for this blockchain. Compare it with <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>, it should be equal.</li>
+    </ul>
+    </div>
+    </div>
+    <!-- ################################################################################################ -->
+  </article>
+</div>
+
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="comparison"></a>
+<div class="wrapper row3">
+  <main class="hoc container clear" style="padding-bottom:0px;"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <p style="text-align:center;">Comparisson with other formats. All of them are based on the aggregation of many documents and creating proofs for all of them in one transaction.</p>
+    <table style="text-align:center;">
+    <tr><!-- #Headers-->
+      <td> </td>
+      <td>BlocReceipt</td>
+      <td>OpenTimestamps</td>
+      <td>Chainpoint v2 </td>
+      <td>originstamp.org</td>
+    </tr>
+    <tr ><!-- #Headers-->
+      <td> Receipt size ~log(N_of_documents)</td>
+      <td><i class="fa fa-check" aria-hidden="true"></i></td>
+      <td><i class="fa fa-check" aria-hidden="true"></i></td>
+      <td><i class="fa fa-check" aria-hidden="true"></i></td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+    </tr>
+    <tr >
+      <td> Safe from recovering</td>
+      <td><i class="fa fa-check" aria-hidden="true"></i> for salted</td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+    </tr>
+    <tr >
+      <td> Anchoring to different blockchains</td>
+      <td><i class="fa fa-check" aria-hidden="true"></i></td>
+      <td><i class="fa fa-check" aria-hidden="true"></i></td>
+      <td><i class="fa fa-check" aria-hidden="true"></i></td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+    </tr>
+    <tr >
+      <td> Time-independent anchoring to different blockchains</td>
+      <td><i class="fa fa-check" aria-hidden="true"></i></td>
+      <td>????</td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+    </tr>
+    <tr >
+      <td> Provable metadata</td>
+      <td><i class="fa fa-check" aria-hidden="true"></i></td>
+      <td>????</td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+    </tr>
+    <tr >
+      <td> Third-service verifying</td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+      <td><i class="fa fa-check" aria-hidden="true"></i> via calendars</td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+    </tr>
+    </table>
+  <ul>
+    <li><span class="red-line">BlockReceipt vs Chainpoint v.2</span>: these two formats are very similar in essence, however are different in purposes. BlockReceipt is focused on providing convinient and secure method for receipt issuers, thus many unnecessary fields are optional to decrease size and source document hash can be salted to protect data from being recovered. From other hand Chainpoint is focused on providing convinient receipts for checkers. Besides that Chainpoint allows to use different hash algorithms. Both Chainpoint and Blockreceipt allows to anchor data to different blockchains simultaneously, however Chainpoint requires synchronous anchoring.</li>
+    <li><span class="red-line">BlockReceipt vs OpenTimestamp</span>: ***</li>
+  </ul>
+  </main>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="libs"></a>
+<div class="wrapper bgded overlay" style="">
+  <div class="hoc container clear"> 
+    <!-- ################################################################################################ -->
+    <ul class="nospace group">
+      <li class="libs"><a href="#"><i class="devicon devicon-cplusplus-plain"></i></a>
+        <p>c++</p>
+      </li>
+      <li class="libs"><a href="#"><i class="devicon devicon-python-plain"></i></a>
+        <p>python</p>
+      </li>
+      <li class="libs"><a href="#"><i class="devicon devicon-ruby-plain"></i></a>
+        <p>ruby</p>
+      </li>
+      <li class="libs"><a href="#"><i class="devicon devicon-javascript-plain"></i></a>
+        <p>javascript</p>
+      </li>
+      <li class="libs"><a href="#"><i class="devicon devicon-java-plain"></i></a>
+        <p>java</p>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a name="contribute"></a>
+
+<div class="wrapper row3">
+  <div class="hoc container clear center"> 
+    <!-- ################################################################################################ -->
+    <span class="contribute-button">
+      <a href="https://github.com/***" target="blank"><i class="devicon devicon-github-plain-wordmark colored"></i>
+         <p>CONTRIBUTE</p>
+      </a>
+    </span>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<div class="wrapper row5">
+  <div id="copyright" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <p class="fl_left">BlockReceipt</p>
+    <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="layout/scripts/jquery.min.js"></script>
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
+</body>
+</html>
