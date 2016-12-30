@@ -248,9 +248,11 @@ Licence URI: http://www.os-templates.com/template-terms
       <li> Place <span class="piece-of-code">"<span class="key">partialData</span>"</span> into <span class="piece-of-code">"<span class="key">data</span>"</span> field of receipt.</li>
       <li> Stringify <span class="piece-of-code">"<span class="key">fullData</span>"</span> according to <a href="http://json.org/">JSON-rules</a> in a such a way to make all dictionaries (if they are presented in additional data) sorted by key. All space-characters should be omitted.</li>
       <li> If you want to salt receipt, use argon2 algorithm with desired parameters (however key-length should be 32bytes) to salt stringified <span class="piece-of-code">"<span class="key">fullData</span>"</span> and place resulting string(formatted in accordance with <a href="https://github.com/P-H-C/phc-string-format/blob/master/phc-sf-spec.md">Password Hashing Context specs</a>) to <span class="piece-of-code">"<span class="key">salt</span>"</span> field of receipt. Last 43 letters of this string is salted hash encoded in B64. Decode it to 32bytes hex-string to get <span class="piece-of-code">"<span class="key">preparedHash</span>"</span> parameter. If you don't want to salt receipt, hash stringified <span class="piece-of-code">"<span class="key">fullData</span>"</span> with <span class="piece-of-code">sha256</span> algo to get <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>.</li>
-      <li> Place <span class="piece-of-code">"<span class="key">preparedHash</span>"</span> into merkle-tree with hashes for other documents. Create <span class="piece-of-code">"<span class="key">merkleProof</span>"</span> as ordered array of siblings from the deepest to the second-level from top. Thus first element of array will be hashed with <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>, result of hashing will be hashed with next (second) element of array and so on. Final result of this process will be called further <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span>. </li>
+      <li> Place <span class="piece-of-code">"<span class="key">preparedHash</span>"</span> into merkle-tree with hashes for other documents. Create <span class="piece-of-code">"<span class="key">merkleProof</span>"</span> as ordered array of siblings from the deepest to the second-level from top. Thus first element of array will be hashed with <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>, result of hashing will be hashed with next (second) element of array and so on. </li>
+      <li> Calculate <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span>: take <span class="piece-of-code">"<span class="key">preparedHash</span>"</span>, sum it with first sibling as hex-number, represent sum as hex-string (up to 65-symbols long without leading <span class="piece-of-code">"0x"</span> or zeros), hash this hex-string via <span class="piece-of-code">sha256</span>. Repeat with next level sibling.</li>
+      <li> Final result of this process will be called further <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span>. </li>
       <li> Optionally place <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> into <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> field of receipt.</li>
-      <li> Embed <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> int blockchain with accordace to rules of embedding. Result txid place into <span class="piece-of-code">"<span class="key">*-tx</span>"</span> field of receipt.</li>
+      <li> Embed <span class="piece-of-code">"<span class="key">merkleRoot</span>"</span> into blockchain with accordace to rules of embedding. Result txid place into <span class="piece-of-code">"<span class="key">*-tx</span>"</span> field of receipt.</li>
 
     </ul>
     </div>
@@ -313,7 +315,7 @@ Licence URI: http://www.os-templates.com/template-terms
     <tr >
       <td> Safe from recovering</td>
       <td><i class="fa fa-check" aria-hidden="true"></i> for salted</td>
-      <td><i class="fa fa-times" aria-hidden="true"></i></td>
+      <td><i class="fa fa-eye-slash" aria-hidden="true"></i> nonce</td>
       <td><i class="fa fa-times" aria-hidden="true"></i></td>
       <td><i class="fa fa-times" aria-hidden="true"></i></td>
     </tr>
@@ -327,14 +329,14 @@ Licence URI: http://www.os-templates.com/template-terms
     <tr >
       <td> Time-independent anchoring to different blockchains</td>
       <td><i class="fa fa-check" aria-hidden="true"></i></td>
-      <td>????</td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
       <td><i class="fa fa-times" aria-hidden="true"></i></td>
       <td><i class="fa fa-times" aria-hidden="true"></i></td>
     </tr>
     <tr >
       <td> Provable metadata</td>
       <td><i class="fa fa-check" aria-hidden="true"></i></td>
-      <td>????</td>
+      <td><i class="fa fa-times" aria-hidden="true"></i></td>
       <td><i class="fa fa-times" aria-hidden="true"></i></td>
       <td><i class="fa fa-times" aria-hidden="true"></i></td>
     </tr>
@@ -348,7 +350,7 @@ Licence URI: http://www.os-templates.com/template-terms
     </table>
   <ul>
     <li><span class="red-line">BlockReceipt vs Chainpoint v.2</span>: these two formats are very similar in essence, however are different in purposes. BlockReceipt is focused on providing convinient and secure method for receipt issuers, thus many unnecessary fields are optional to decrease size and source document hash can be salted to protect data from being recovered. From other hand Chainpoint is focused on providing convinient receipts for checkers. Besides that Chainpoint allows to use different hash algorithms. Both Chainpoint and Blockreceipt allows to anchor data to different blockchains simultaneously, however Chainpoint requires synchronous anchoring.</li>
-    <li><span class="red-line">BlockReceipt vs OpenTimestamp</span>: ***</li>
+    <li><span class="red-line">BlockReceipt vs OpenTimestamp</span>: OpenTimestamps uses nonce to conceal hash of original file, however it can be recovered via brute-force, while BlockReceipt uses salted hashing via argon2 to prevent recovering. Besides that, OpenTimestamps uses network of OpenTimestamp calendars to commit receipt time up to seconds, however this system doesn't provide any protection agains fraud.</li>
   </ul>
   </main>
 </div>
@@ -358,7 +360,10 @@ Licence URI: http://www.os-templates.com/template-terms
 <a name="libs"></a>
 <div class="wrapper bgded overlay" style="">
   <div class="hoc container clear"> 
-    <!-- ################################################################################################ -->
+    <center><h2>To check BlockReceipt proofs you can use free portable service <a href="checkproof.org" target="_blank">checkproof.org</a> </h2></center>
+
+    <!-- ################################################################################################ 
+    
     <ul class="nospace group">
       <li class="libs"><a href="#"><i class="devicon devicon-cplusplus-plain"></i></a>
         <p>c++</p>
@@ -375,7 +380,7 @@ Licence URI: http://www.os-templates.com/template-terms
       <li class="libs"><a href="#"><i class="devicon devicon-java-plain"></i></a>
         <p>java</p>
       </li>
-    </ul>
+    </ul>-->
     <!-- ################################################################################################ -->
   </div>
 </div>
@@ -388,7 +393,7 @@ Licence URI: http://www.os-templates.com/template-terms
   <div class="hoc container clear center"> 
     <!-- ################################################################################################ -->
     <span class="contribute-button">
-      <a href="https://github.com/***" target="blank"><i class="devicon devicon-github-plain-wordmark colored"></i>
+      <a href="https://github.com/EmelyanenkoK/blockreceipt" target="_blank"><i class="devicon devicon-github-plain-wordmark colored"></i>
          <p>CONTRIBUTE</p>
       </a>
     </span>
